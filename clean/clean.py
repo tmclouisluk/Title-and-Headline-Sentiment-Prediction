@@ -1,6 +1,9 @@
+import numpy as np
+
+
 class Cleansing(object):
     @staticmethod
-    def clean_null(df, col):
+    def clean_null(df):
         empty = ((df['Title'].isnull()) \
                  | (df['Headline'].isnull()) \
                  | (df['SentimentTitle'].isnull()) \
@@ -15,14 +18,17 @@ class Cleansing(object):
         return df
 
     @staticmethod
-    def set_sentiment(df, label):
-        def trans_sentiment(row):
-            if row == 0:
-                return 0
-            elif row > 0:
-                return 1
-            else:
-                return -1
+    def run_clean(df):
+        df_result = Cleansing.clean_null(df)
+        df_result = Cleansing.drop_useless_cols(df_result)
 
-        df[label] = df[label].apply(trans_sentiment)
-        return df
+        return df_result
+
+    @staticmethod
+    def get_y(df, label):
+        df['Negative'] = df[label].apply(lambda x: 1 if x < -0.05 else 0)
+        df['Neutral'] = df[label].apply(lambda x: 1 if -0.05 <= x <= 0.05 else 0)
+        df['Positive'] = df[label].apply(lambda x: 1 if x > 0.05 else 0)
+
+        return df[['Negative', 'Neutral', 'Positive']].values
+
