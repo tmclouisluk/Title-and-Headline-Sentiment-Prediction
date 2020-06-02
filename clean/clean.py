@@ -1,5 +1,6 @@
 import numpy as np
 import re
+import tensorflow as tf
 
 
 class Cleansing(object):
@@ -21,12 +22,10 @@ class Cleansing(object):
     @staticmethod
     def set_sentiment(df, label):
         def trans_sentiment(row):
-            if row < -0.05:
-                return -1
-            elif row > 0.05:
-                return 1
-            else:
+            if row < 0:
                 return 0
+            else:
+                return 1
 
         df[label] = df[label].apply(trans_sentiment)
         return df
@@ -56,20 +55,19 @@ class Cleansing(object):
 
     @staticmethod
     def get_y(df):
-        df['Total_Sentiment'] = df.apply(lambda x: (x['SentimentTitle'] + x['SentimentHeadline'])/2, axis=1)
-        df['Negative'] = df["Total_Sentiment"].apply(lambda x: 1 if x < -0.05 else 0)
-        df['Neutral'] = df["Total_Sentiment"].apply(lambda x: 1 if -0.05 <= x <= 0.05 else 0)
-        df['Positive'] = df["Total_Sentiment"].apply(lambda x: 1 if x > 0.05 else 0)
-
-        return df[['Negative', 'Neutral', 'Positive']].values
+        #df['Total_Sentiment'] = df.apply(lambda x: (x['SentimentTitle'] + x['SentimentHeadline'])/2, axis=1)
+        df = Cleansing.set_sentiment(df, 'SentimentTitle')
+        df = Cleansing.set_sentiment(df, 'SentimentHeadline')
+        #df = Cleansing.set_sentiment(df, 'Total_Sentiment')
+        return df[['SentimentTitle', 'SentimentHeadline']].values
 
     @staticmethod
     def run_clean(df):
         df_result = Cleansing.clean_null(df)
         df_result = Cleansing.drop_useless_cols(df_result)
         df_result = Cleansing.remove_special_char(df_result)
-        df_result = Cleansing.set_sentiment(df_result, 'SentimentTitle')
-        df_result = Cleansing.set_sentiment(df_result, 'SentimentHeadline')
+        #df_result = Cleansing.set_sentiment(df_result, 'SentimentTitle')
+        #df_result = Cleansing.set_sentiment(df_result, 'SentimentHeadline')
 
         return df_result
 
