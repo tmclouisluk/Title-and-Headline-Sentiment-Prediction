@@ -26,14 +26,17 @@ class BERT(object):
 
         pooled_output, sequence_output = self.bert_layer([input_word_ids, input_mask, segment_ids])
 
-        x = tf.keras.layers.GlobalMaxPool1D()(sequence_output)
+        x = tf.keras.layers.GlobalAveragePooling1D()(sequence_output)
+        x = tf.keras.layers.Dense(256, activation="relu")(x)
+        x = tf.keras.layers.Dropout(0.1)(x)
+        x = tf.keras.layers.Dense(256, activation="relu")(x)
         x = tf.keras.layers.Dropout(0.1)(x)
         out = tf.keras.layers.Dense(num_labels, activation="softmax", name="dense_output")(x)
 
         model = tf.keras.models.Model(
             inputs=[input_word_ids, input_mask, segment_ids], outputs=out)
 
-        model.compile(loss='binary_crossentropy',
+        model.compile(loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
                       optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1e-08),
                       metrics=['accuracy'])
 
