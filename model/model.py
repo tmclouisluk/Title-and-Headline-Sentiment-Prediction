@@ -33,7 +33,7 @@ class BERT(object):
         model = tf.keras.models.Model(
             inputs=[input_word_ids, input_mask, segment_ids], outputs=out)
 
-        model.compile(loss='categorical_crossentropy',
+        model.compile(loss='binary_crossentropy',
                       optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1e-08),
                       metrics=['accuracy'])
 

@@ -56,7 +56,7 @@ class Cleansing(object):
 
     @staticmethod
     def get_y(df):
-        df['Total_Sentiment'] = df.apply(lambda x: (x['SentimentTitle'] + x['SentimentTitle'])/2, axis=1)
+        df['Total_Sentiment'] = df.apply(lambda x: (x['SentimentTitle'] + x['SentimentHeadline'])/2, axis=1)
         df['Negative'] = df["Total_Sentiment"].apply(lambda x: 1 if x < -0.05 else 0)
         df['Neutral'] = df["Total_Sentiment"].apply(lambda x: 1 if -0.05 <= x <= 0.05 else 0)
         df['Positive'] = df["Total_Sentiment"].apply(lambda x: 1 if x > 0.05 else 0)
