@@ -55,6 +55,15 @@ class Cleansing(object):
         return df
 
     @staticmethod
+    def get_y(df):
+        df['Total_Sentiment'] = df.apply(lambda x: (x['SentimentTitle'] + x['SentimentTitle'])/2, axis=1)
+        df['Negative'] = df["Total_Sentiment"].apply(lambda x: 1 if x < -0.05 else 0)
+        df['Neutral'] = df["Total_Sentiment"].apply(lambda x: 1 if -0.05 <= x <= 0.05 else 0)
+        df['Positive'] = df["Total_Sentiment"].apply(lambda x: 1 if x > 0.05 else 0)
+
+        return df[['Negative', 'Neutral', 'Positive']].values
+
+    @staticmethod
     def run_clean(df):
         df_result = Cleansing.clean_null(df)
         df_result = Cleansing.drop_useless_cols(df_result)
