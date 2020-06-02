@@ -13,7 +13,7 @@ class BERT(object):
 
         self.tokenizer = bert.bert_tokenization.FullTokenizer(vocab_file, do_lower_case)
 
-    def create_model(self, max_seq_length, num_labels=3):
+    def create_model(self, max_seq_length, num_labels=2, learning_rate=2e-5):
         input_word_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype=tf.int32,
                                                name="input_word_ids")
         input_mask = tf.keras.layers.Input(shape=(max_seq_length,), dtype=tf.int32,
@@ -30,8 +30,8 @@ class BERT(object):
         model = tf.keras.models.Model(
             inputs=[input_word_ids, input_mask, segment_ids], outputs=out)
 
-        model.compile(loss='binary_crossentropy',
-                      optimizer=tf.keras.optimizers.Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
+        model.compile(loss='categorical_crossentropy',
+                      optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1e-08),
                       metrics=['accuracy'])
 
         return model
