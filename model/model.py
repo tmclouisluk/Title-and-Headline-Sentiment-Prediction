@@ -26,7 +26,7 @@ class BERT(object):
 
         pooled_output, sequence_output = self.bert_layer([input_word_ids, input_mask, segment_ids])
 
-        x = tf.keras.layers.GlobalAveragePooling1D()(sequence_output)
+        x = tf.keras.layers.GlobalMaxPool1D()(sequence_output)
         x = tf.keras.layers.Dense(256, activation="relu")(x)
         x = tf.keras.layers.Dropout(0.1)(x)
         x = tf.keras.layers.Dense(256, activation="relu")(x)
