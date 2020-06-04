@@ -31,7 +31,7 @@ class BERT(object):
         x = tf.keras.layers.Dropout(0.1)(x)
         x = tf.keras.layers.Dense(256, activation="relu")(x)
         x = tf.keras.layers.Dropout(0.1)(x)
-        out = tf.keras.layers.Dense(num_labels, activation="softmax", name="dense_output")(x)
+        out = tf.keras.layers.Dense(num_labels, activation="sigmoid", name="dense_output")(x)
 
         model = tf.keras.models.Model(
             inputs=[input_word_ids, input_mask, segment_ids], outputs=out)

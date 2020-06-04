@@ -24,10 +24,10 @@ class Processing(object):
             return input_ids
 
         stokens = tokenizer.tokenize(sentence1)
-        stokens = stokens[:(int(max_seq_length/2) - 2)]
+        stokens = stokens[:(int(max_seq_length*9/(9+26)) - 2)]
 
         stokens2 = tokenizer.tokenize(sentence2)
-        stokens2 = stokens2[:(int(max_seq_length/2) - 1)]
+        stokens2 = stokens2[:(int(max_seq_length*26/(9+26)) - 1)]
         stokens = ["[CLS]"] + stokens + ["[SEP]"] + stokens2 + ["[SEP]"]
 
         ids = get_ids(stokens, tokenizer, max_seq_length)
