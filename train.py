@@ -11,7 +11,7 @@ import tensorflow as tf
 
 def main():
     # Load data
-    train_path = "./data/train_file.csv"
+    train_path = "./data/train_new.csv"
     train_data = pd.read_csv(train_path)
 
     train_data = Cleansing.run_clean(train_data)
@@ -21,7 +21,7 @@ def main():
     max_length = 32
     num_labels = 2
     bert = BERT()
-    model = bert.create_model(max_length, num_labels, learning_rate=1e-5)
+    model = bert.create_model(max_length, num_labels, learning_rate=1e-4)
     model.summary()
 
     train_example = Processing.to_bert_input(bert.tokenizer, train, "Title", "Headline", max_length)

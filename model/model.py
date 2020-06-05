@@ -6,7 +6,7 @@ import bert
 
 
 class BERT(object):
-    BERT_MODEL_HUB = "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1"
+    BERT_MODEL_HUB = "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/2"
 
     def __init__(self):
         self.bert_layer = hub.KerasLayer(self.BERT_MODEL_HUB, trainable=False)
@@ -36,9 +36,9 @@ class BERT(object):
         model = tf.keras.models.Model(
             inputs=[input_word_ids, input_mask, segment_ids], outputs=out)
 
-        model.compile(loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
+        model.compile(loss=tf.keras.losses.BinaryCrossentropy(),
                       optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1e-08),
-                      metrics=['accuracy'])
+                      metrics=['accuracy', tf.keras.metrics.AUC()])
 
         return model
 

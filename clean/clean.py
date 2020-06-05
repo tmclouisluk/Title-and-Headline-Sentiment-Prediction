@@ -11,6 +11,7 @@ class Cleansing(object):
                  | (df['SentimentTitle'].isnull()) \
                  | (df['SentimentHeadline'].isnull()))
         df_result = df[~empty]
+        df_result = df_result[~((df_result['SentimentTitle'] == "neutral") | (df_result['SentimentHeadline'] == "neutral"))]
         return df_result
 
     @staticmethod
@@ -22,8 +23,10 @@ class Cleansing(object):
     @staticmethod
     def set_sentiment(df, label):
         def trans_sentiment(row):
-            if row < 0:
+            if row == "negative":
                 return 0
+            # elif row == "neutral":
+            #     return 0.5
             else:
                 return 1
 
